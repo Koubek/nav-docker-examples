@@ -22,5 +22,4 @@ $NAV_DOCKER_IMAGE = 'navdocker.azurecr.io/dynamics-nav:devpreview'
 ```
 
 ## EXAMPLES
-- [basic example](basic)
-    - This is the most elemental example. I would recommend to run exactly this one at the very first moment to validate that everything is working fine. You specify the minimum of the parameters.
+- [basic example](basic) - This is the most elemental example. I would recommend to run exactly this one at the very first moment to validate that everything is working fine. You specify the minimum of the parameters.
