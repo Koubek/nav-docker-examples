@@ -22,4 +22,7 @@ $NAV_DOCKER_IMAGE = 'navdocker.azurecr.io/dynamics-nav:devpreview'
 ```
 
 ## EXAMPLES
-- [basic example](basic) - This is the most elemental example. I would recommend to run exactly this one at the very first moment to validate that everything is working fine. You specify the minimum of the parameters.
+
+- [basic](basic) - This is the most elemental example. I would recommend to run exactly this one at the very first moment to validate that everything is working fine. You specify the minimum of the parameters.
+
+- [basic with user+pwd defined](basic-userpwd) - Similar to the previous one but you specify **user name**, **user pwd**, **container hostname**, **container name**. There are also described some security concerns (security of the password you use). The example includes two variants.
