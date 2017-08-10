@@ -8,22 +8,22 @@ Let\`s say a word about the **Windows authentication** for **Windows Containers*
 
 As I have already mentioned - this behavior comes by default. But you have two options how to solve WinAuth problem:
 
-- You can provide your credentials explicitly (pass your windows credentials into the container) and benefit from the fact that Windows authenticate correctly even in case you are on the domain (your Docker host) and the container has its own workgroup inside.
+- You can provide your credentials explicitly (pass your windows credentials into the container) and benefit from the fact that Windows will authenticate you correctly even in case you are on the domain (your Docker host) and the container has its own workgroup inside.
 You can see that the solution we have just mentioned improves somehow our possibilities, it is the easy-to-achieve solution. 
 On the other hand, we still need to provide our credentials and those can be revealed using the techniques mentioned in the previous example.
 
-- You can use [gMSA](https://technet.microsoft.com/en-us/library/jj128431(v=ws.11).aspx) and solve the integration with the domain properly. Unfortunately, this steps is not so easy to achieve. There are few prerequisites you must fulfill. One of them, and this one is the key one, goes against your **Domain Controller**. **"The Active Directory schema in the gMSA domain’s forest needs to be updated to Windows Server 2012 to create a gMSA."** I can see this requirement can be a real problem for some partners. An even worse situation can be seen in the case of the partners\` customers. There are many companies with the domain\`s forest on the 2003 level. As the objective of the example is the previous (the less secure one) solution we won\`t discuss any other details related to **gMSA** right now. There will be one or more examples focused on the **gMSA** solution.
+- You can use [gMSA](https://technet.microsoft.com/en-us/library/jj128431(v=ws.11).aspx) and solve the integration with the domain properly. Unfortunately, this is not so easy to achieve. There are few prerequisites you must fulfill. One of them, and this one is the key one, goes against your **Domain Controller**. **"The Active Directory schema in the gMSA domain’s forest needs to be updated to Windows Server 2012 to create a gMSA."** I can see this requirement can be a real problem for some partners. An even worse situation can be seen in the case of the partners\` customers. There are many companies with the domain\`s forest on the 2003 level. As the objective of the example is the previous (the less secure one) solution we won\`t discuss any other details related to **gMSA** right now. There will be one or more examples focused on the **gMSA** solution.
 
 
 ### Specific `docker run` parameters in the example are:
 
-- `-e Auth=Windows` - Required in this example. Alternatively, you can also use `-e WindowsAuth=Y` to achieve the same - setting the container work in Windows Authentication mode.
+- `-e Auth=Windows` - Required in this example. Alternatively, you can also use `-e WindowsAuth=Y` to achieve the same - setting the container (NAV services) to work in Windows Authentication mode.
 
 - `-e username=Jakub` - Required in this example. Set your Windows user account (**without** the domain name part).
 
 - `-e password=$passplain` - Required in this example. Your password for the provided user account. Must match with your Windows account password!!! You can see we use the same technique demonstrated in the [previous example](../basic_userpwd) (in the second variant). You still need to provide the password what logically means we have to consider possible security issues.
 
-- `-e clickonce=Y` - The container will create and publish **ClickOnce** package. This gives us the possibility access using Windows Client (aka RTC) and access natively using our Windows credentials.
+- `-e clickonce=Y` - The container will create and publish **ClickOnce** package. This gives us the possibility to access NAV using Windows Client (aka RTC) and access natively using our Windows credentials.
 
 ---
 
@@ -39,7 +39,8 @@ You can see there is a new link to download "ClickOnce Manifest". Use the link, 
 
 ![](../media/basic_winauth_clickOnceInstallation.jpg)
 
- Run the manifest. After that, you should be able to see running RTC (no password will be required).
+
+Run the manifest. After that, you should be able to see running RTC (no password will be required).
 
 ![](../media/basic_winauth_clickOnce_RTC.jpg)
 
