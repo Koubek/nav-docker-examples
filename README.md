@@ -25,4 +25,7 @@ $NAV_DOCKER_IMAGE = 'navdocker.azurecr.io/dynamics-nav:devpreview'
 
 - [basic](basic) - This is the most elemental example. I would recommend to run exactly this one at the very first moment to validate that everything is working fine. You specify the minimum of the parameters.
 
-- [basic with user+pwd defined](basic-userpwd) - Similar to the previous one but you specify **user name**, **user pwd**, **container hostname**, **container name**. There are also described some security concerns (security of the password you use). The example includes two variants.
+- [basic with user+pwd defined](basic_userpwd) - Similar to the previous one but you specify **user name**, **user pwd**, **container hostname**, **container name**. There are also described some security concerns (security of the password you use). The example includes two variants.
+
+- [winauth (shared) + VS Code](basic_winauth) - This example demonstrates *shared* Windows authentication. However, in this case we need to provide our Windows the credentials, including the password so we are still far away from the secure solution.
+We will created and published **ClickOnce** package. And finally, we will try to connect from **VS Code** to the container`s **dev services**.
