@@ -21,34 +21,34 @@ Let\`s review specific parameters we use in this example (by default we will be 
     
     You can see there are two examples:
     - `run.ps1` - The default one with everything (pwd) included in the file.
-    - `run.inputPwd.ps1` - We can consider this variant a little bit better as the password insn\`t included in the file and you need to present it when running the script. 
+    - `run.inputPwd.ps1` - We can consider this variant a little bit better as the password isn\`t included in the file and you need to present it when running the script. 
     
     `docker inspect [container_name]` still reveal the password in both cases!!!
 
 - Output of the `run.ps1`
 
-![](../media/basic_userpwd_containerStarted_01.jpg)
+    ![](../media/basic_userpwd_containerStarted_01.jpg)
 
-   - You can see **hostname** is that one we defined in the script using `--hostname` parameter.
+    You can see **hostname** is that one we defined in the script using `--hostname` parameter.
 
 - Output of the `run.inputPwd.ps1`
 
-![](../media/basic_userpwd_containerStarted_02.jpg)
+    ![](../media/basic_userpwd_containerStarted_02.jpg)
 
-    - You can see the password is being displayed on the screen so the purpose of the input dialog is very limited. The password is not being stored on the docker host but still you can see it in the log. Maybe this could be changed [Issue #7](https://github.com/Microsoft/nav-docker/issues/7).
+    You can see the password is being displayed on the screen so the purpose of the input dialog is very limited. The password is not being stored on the docker host but still, you can see it in the log. Maybe this could be changed [Issue #7](https://github.com/Microsoft/nav-docker/issues/7).
 
 - `docker ps` displays both containers. Both of them are running and can coexist because the container names are different.
 
-![](../media/basic_userpwd_containerList.jpg)
+    ![](../media/basic_userpwd_containerList.jpg)
 
 # !!! How can be revealed the password value !!!
 
-- Output of the container.
+- The output of the container:
 
-    - Of course, you can run any container in the detached mode but still you can use `docker logs [container_name]`. This command will output the log so you can see the same data you can see in the *interactive* mode.
+    - Of course, you can run any container in the detached mode but still, you can use `docker logs [container_name]`. This command will output the log so you can see the same data you can see in the *interactive* mode.
 
-- You can run `docker inspect [container_name]` which displays a *JSON* string with lot of metadata describing the container. All input parameters are included!!!
+- You can run `docker inspect [container_name]` which displays a *JSON* string with a lot of metadata describing the container. All input parameters are included!!!
 
     - The following displays only **env** variables (this is where the pwd is being stored): `docker inspect --format '{{ index .Config.Env }}' navex-basic-userpwd`
 
-    ![](../media/basic_userpwd_dockerInspect_01.jpg)
+        ![](../media/basic_userpwd_dockerInspect_01.jpg)
