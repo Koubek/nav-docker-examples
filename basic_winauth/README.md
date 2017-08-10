@@ -2,22 +2,22 @@
 
 ## SHARED WINDOWS AUTHENTICATION + CLICKONCE + VISUAL STUDIO CODE
 
-In this case we will describe a simple solution from the docker perspective. Our command `docker run` will be pretty straightforward and if you passed through the previous examples you will have no problem to understand and achieve same results as I do.
+In this case, we will describe a simple solution from the Docker perspective. Our command `docker run` will be pretty straightforward and if you passed through the previous examples you will have no problem to understand and achieve same results as I do.
 
-Let\`s say a word about the **Windows authentication** for **Windows Containers**. Containers **by default** doesn\`t provide mechanisms that will enable real Windows authentication for domain users. This mean you can\`t specify domain accounts for the services (for example) running inside the containers. And in a very similar way, you can\`t authenticate yourself using your domain account against the services and solutions running inside the containers.
+Let\`s say a word about the **Windows authentication** for **Windows Containers**. Containers **by default** don\`t provide mechanisms that will enable real Windows authentication for domain users. This means you can\`t specify domain accounts for the services (for example) running inside the containers. And in a very similar way, you can\`t authenticate yourself using your domain account against the services and solutions running inside the containers.
 
 As I have already mentioned - this behavior comes by default. But you have two options how to solve WinAuth problem:
 
-- You can provide your credentials explicitly (pass your windows credentials into the container) and benefit from the fact that Windows authenticate correctly even in case you are on the domain (your docker host) and the container has its own workgroup inside.
-You can see that the solution we have just mentioned improves somehow our possibilities, it is easy-to-achieve solution. 
+- You can provide your credentials explicitly (pass your windows credentials into the container) and benefit from the fact that Windows authenticate correctly even in case you are on the domain (your Docker host) and the container has its own workgroup inside.
+You can see that the solution we have just mentioned improves somehow our possibilities, it is the easy-to-achieve solution. 
 On the other hand, we still need to provide our credentials and those can be revealed using the techniques mentioned in the previous example.
 
-- You can use [gMSA](https://technet.microsoft.com/en-us/library/jj128431(v=ws.11).aspx) and solve the integration with the domain properly. Unfortunately, this steps is no so easy to achieve to. There are few prerequisites you must fulfil. One of them, and this one is the key one, goes against your **Domain Controller**. **"The Active Directory schema in the gMSA domain’s forest needs to be updated to Windows Server 2012 to create a gMSA."** I can see this requirement can be real problem for some partners and even worse situation can be seen the customers. There are lot of companies with the domain\`s forest on the 2003 level. As the objective of the example is the previous (the less secure one) solution we won\`t discuss any other details related to **gMSA** right now. There will one or more examples focused on the **gMSA** solution.
+- You can use [gMSA](https://technet.microsoft.com/en-us/library/jj128431(v=ws.11).aspx) and solve the integration with the domain properly. Unfortunately, this steps is not so easy to achieve. There are few prerequisites you must fulfill. One of them, and this one is the key one, goes against your **Domain Controller**. **"The Active Directory schema in the gMSA domain’s forest needs to be updated to Windows Server 2012 to create a gMSA."** I can see this requirement can be a real problem for some partners. An even worse situation can be seen in the case of the partners\` customers. There are many companies with the domain\`s forest on the 2003 level. As the objective of the example is the previous (the less secure one) solution we won\`t discuss any other details related to **gMSA** right now. There will be one or more examples focused on the **gMSA** solution.
 
 
 ### Specific `docker run` parameters in the example are:
 
-- `-e Auth=Windows` - Required in this example. Alternatively you can also use `-e WindowsAuth=Y` to achieve the same - setting the container work in Windows Authentication mode.
+- `-e Auth=Windows` - Required in this example. Alternatively, you can also use `-e WindowsAuth=Y` to achieve the same - setting the container work in Windows Authentication mode.
 
 - `-e username=Jakub` - Required in this example. Set your Windows user account (**without** the domain name part).
 
@@ -27,7 +27,7 @@ On the other hand, we still need to provide our credentials and those can be rev
 
 ---
 
-## Output of the `run.ps1` script:
+## The output of the `run.ps1` script:
 
 ![](../media/basic_winauth_containerStarted.jpg)
 
@@ -35,11 +35,11 @@ We can see that there is no information about the user (user name and user passw
 
 ## CLICKONCE
 
-You can see there is a new link to download "ClickOnce Manifest". Use the link, open the webpage and download the manifest clicking on **Install now**.
+You can see there is a new link to download "ClickOnce Manifest". Use the link, open the web page and download the manifest clicking on **Install now**.
 
 ![](../media/basic_winauth_clickOnceInstallation.jpg)
 
- Run the manifest. After that you should be able to see running RTC (no password will be required).
+ Run the manifest. After that, you should be able to see running RTC (no password will be required).
 
 ![](../media/basic_winauth_clickOnce_RTC.jpg)
 
