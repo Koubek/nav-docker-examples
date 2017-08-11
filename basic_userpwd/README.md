@@ -35,7 +35,7 @@ Let\`s review specific parameters we use in this example (by default we will be 
 
     ![](../media/basic_userpwd_containerStarted_02.jpg)
 
-    You can see the password is being displayed on the screen so the purpose of the input dialog is very limited. The password is not being stored on the docker host but still, you can see it in the log. Maybe this could be changed [Issue #7](https://github.com/Microsoft/nav-docker/issues/7).
+    ~~You can see the password is being displayed on the screen so the purpose of the input dialog is very limited. The password is not being stored on the docker host but still, you can see it in the log.~~ This was reported and fixed: [Issue #7](https://github.com/Microsoft/nav-docker/issues/7).
 
 - `docker ps` displays both containers. Both of them are running and can coexist because the container names are different.
 

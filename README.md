@@ -4,7 +4,7 @@
 
 At this moment, all examples use Docker images for MS Dynamics NAV provided by Microsoft. 
 
-Microsoft at the moment doesn\`t provide the images in the public repositories (e.g. [Docker Hub](https://hub.docker.com/)). Instead, there is a private repository for testing purposes only. Currently, they have been opened to give an access to the private/testing repository to *anyone* interested and willing to do some tests and provide a feedback. This can change at any moment I suppose.
+Microsoft at the moment doesn\`t provide the images in the public repositories (e.g. [Docker Hub](https://hub.docker.com/)). Instead, there is a private repository for testing purposes only. Currently, they have been opened to give the access to the private/testing repository to *anyone* interested and willing to do some tests and provide a feedback. This can change at any moment I suppose.
 
 Also, you can visit Microsoft GitHub repository [nav-docker](https://github.com/Microsoft/nav-docker) with the source code they use to build the images. There, you can also register any issue that will appear during the testing.
 
