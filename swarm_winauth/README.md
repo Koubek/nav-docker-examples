@@ -132,3 +132,9 @@ Then in the container navigate to `C:\ProgramData\Docker\secrets` path and list 
 - You should control access to your **Docker API**. In this manner nobody can access your containers directly using `docker exec`. Watch [Set Docker Security Group](https://docs.microsoft.com/virtualization/windowscontainers/manage-docker/configure-docker-daemon#set-docker-security-group).
     
     **Note:** You can access your containers from the host using `Enter-PSSession -ContainerId [container_name_or_id]` but each user accessing in this manner is not a container administrators and can\`t access the folders requiring admin privileges.
+
+- You can use Docker Swarm to scale your service across the nodes in a really simple way (**COUNT = count of replicas you want to distribute across the swarm**:
+    ```
+    docker service scale navex-swarm-winauth=COUNT
+    ```
+    ![](../media/swarm_winauth_scaleReplicas.jpg)
