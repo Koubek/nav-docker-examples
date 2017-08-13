@@ -133,8 +133,22 @@ Then in the container navigate to `C:\ProgramData\Docker\secrets` path and list 
     
     **Note:** You can access your containers from the host using `Enter-PSSession -ContainerId [container_name_or_id]` but each user accessing in this manner is not a container administrators and can\`t access the folders requiring admin privileges.
 
-- You can use Docker Swarm to scale your service across the nodes in a really simple way (**COUNT = count of replicas you want to distribute across the swarm**:
+- You can use Docker Swarm to scale your service across the nodes in a really simple way (**COUNT = count of replicas you want to distribute across the swarm**):
     ```
     docker service scale navex-swarm-winauth=COUNT
     ```
     ![](../media/swarm_winauth_scaleReplicas.jpg)
+
+    You can see service logs to understand better what is happening under the hood. You can see there are actually two instances, each has its own IP address but both shares the same hostname. You can also see that the log mixes the outputs of the both replicas (that are running in my case locally on the same node, of course).
+
+    ![](../media/swarm_winauth_mulitreplicasLogs.jpg)
+
+    You can list the containers and see that there are just two instances/containers belonging to the service.
+
+    ![](../media/swarm_winauth_mulitreplicasListContainers.jpg)
+
+    You can confirm balancing capabilities using simple `ping navex-swarm-winauth` with some time lags between the *pings* (sorry, I have IPv6 active so it is less transparent to see the differences):
+
+    ![](../media/swarm_winauth_mulitreplicasPingA.jpg)
+
+    ![](../media/swarm_winauth_mulitreplicasPingB.jpg)
