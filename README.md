@@ -29,3 +29,5 @@ $NAV_DOCKER_IMAGE = 'navdocker.azurecr.io/dynamics-nav:devpreview'
 
 - [winauth (shared) + VS Code](basic_winauth) - This example demonstrates *shared* Windows authentication. However, in this case we need to provide our Windows the credentials, including the password so we are still far away from the secure solution.
 We will created and published **ClickOnce** package. And finally, we will try to connect from **VS Code** to the container`s **dev services**.
+
+- [winauth on Docker Swarm + Secrets](swarm_winauth) - One of the advanced scenarios. We will increase the security of your credentials using Docker Swarm\`s Secrets. You will need to promote your docker host on the [Docker Swarm](https://docs.microsoft.com/en-us/virtualization/windowscontainers/manage-containers/swarm-mode) node. But don\`t worry, this is actually quite easy to do.
