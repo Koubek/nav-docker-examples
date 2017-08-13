@@ -64,9 +64,9 @@ And in the following screenshot you can see how simple it really is:
 
     - You could simply adjust you `SetupVariables.ps1` and change the logic to avoid using `$env:secretPassword`. Instead, you should define a fixed name of the secret being used by the script. Simply said - you should always use `--secret=mywinuser_win_pwd` (regards my current definitions). 
     
-    - I can imagine this for could be used for storing your/*single* WinAccount pwd on your *single node local cluster* but won\`t be acceptable in a multi-user environment (where you need to define multiple password etc. and so need to define multiple secret identifier).
+    - I can imagine this approach could be used for storing your/*single* WinAccount pwd on your *single node local cluster* but won\`t be acceptable in a multi-user environment on a real cluster (where you need to define multiple password etc. and so need to define multiple secret identifier).
 
-    - My current solution flexible (the positive aspect) in cost of some sort *duplicity* (the negative aspect).
+    - My current solution is more flexible (the positive aspect) in the costs *'duplicity'* (the negative aspect).
 
     **Note:** You can read about the *Mounts* [here](https://docs.docker.com/engine/reference/commandline/service_create/#add-bind-mounts-or-volumes).
 
