@@ -4,7 +4,7 @@
 
 **Note:** Docker 17.06 or higher is required.
 
-This example guide you through the Docker Swarm initialization process. Next we will use [Docker Secrets](https://docs.docker.com/engine/swarm/secrets/) to securely store our password in a strongly encrypted storage provided by Docker. And in the last step we will create a [Docker Service](https://docs.docker.com/engine/reference/commandline/service_create/) that will consume previously created password and will use it in the derived container to complete windows account credentials of your Windows user.
+This example guide you through the Docker Swarm initialization process. Next we will use [Docker Secrets](https://docs.docker.com/engine/swarm/secrets/) to securely store our password in a strongly encrypted storage provided by Docker. Then we will create a [Docker Service](https://docs.docker.com/engine/reference/commandline/service_create/) that will consume previously created password and will use it in the derived container to complete windows account credentials of your Windows user. And in the last step we will scale the service to see how easily can be scaled NAV services using Docker Swarm.
 
 **Note:** What **Docker Service** concept means and how does it work can be seen here: [How services work](https://docs.docker.com/engine/swarm/how-swarm-mode-works/services/).
 
@@ -121,6 +121,34 @@ Then in the container navigate to `C:\ProgramData\Docker\secrets` path and list 
 ![](../media/swarm_winauth_verifyPwdFromTheContainer.jpg)
 
 
+## Scale our services using Docker Swarm:
+
+**Note:** In this case we will actually scale the whole image with all services inside. This mean we won\`t emulate the real scenario with one SQL DB and multiple NAV services around. To do so you need to adjust our current solution and probably the ideal way would be using also **gMSA** and wait until **Docker 17.06 EE** will be released.
+
+You probably know you can use Docker Swarm to scale your service across all Swarm nodes. This can be achieved in a really simple way running the following command:
+
+```
+docker service scale navex-swarm-winauth=COUNT
+```    
+![](../media/swarm_winauth_scaleReplicas.jpg)
+
+Where **COUNT** = count of replicas you want to distribute across the swarm.
+
+You can see service logs to understand better what is happening under the hood. You can see there are actually two instances, each has its own IP address but both shares the same hostname. You can also see that the log mixes the outputs of the both replicas (that are running in my case locally on the same node, of course).
+
+![](../media/swarm_winauth_mulitreplicasLogs.jpg)
+
+You can list the containers and see that there are just two instances/containers belonging to the service.
+
+![](../media/swarm_winauth_mulitreplicasListContainers.jpg)
+
+You can confirm balancing capabilities using simple `ping navex-swarm-winauth` with some time lags between the *pings* (sorry, I have IPv6 active so it is less transparent to see the differences):
+
+![](../media/swarm_winauth_mulitreplicasPingA.jpg)
+
+![](../media/swarm_winauth_mulitreplicasPingB.jpg)
+
+
 ## Conclusions:
 
 - You can simply promote your local Docker Engine into the Docker Swarm node using one command.
@@ -133,22 +161,4 @@ Then in the container navigate to `C:\ProgramData\Docker\secrets` path and list 
     
     **Note:** You can access your containers from the host using `Enter-PSSession -ContainerId [container_name_or_id]` but each user accessing in this manner is not a container administrators and can\`t access the folders requiring admin privileges.
 
-- You can use Docker Swarm to scale your service across the nodes in a really simple way (**COUNT = count of replicas you want to distribute across the swarm**):
-    ```
-    docker service scale navex-swarm-winauth=COUNT
-    ```
-    ![](../media/swarm_winauth_scaleReplicas.jpg)
-
-    You can see service logs to understand better what is happening under the hood. You can see there are actually two instances, each has its own IP address but both shares the same hostname. You can also see that the log mixes the outputs of the both replicas (that are running in my case locally on the same node, of course).
-
-    ![](../media/swarm_winauth_mulitreplicasLogs.jpg)
-
-    You can list the containers and see that there are just two instances/containers belonging to the service.
-
-    ![](../media/swarm_winauth_mulitreplicasListContainers.jpg)
-
-    You can confirm balancing capabilities using simple `ping navex-swarm-winauth` with some time lags between the *pings* (sorry, I have IPv6 active so it is less transparent to see the differences):
-
-    ![](../media/swarm_winauth_mulitreplicasPingA.jpg)
-
-    ![](../media/swarm_winauth_mulitreplicasPingB.jpg)
+- You can use Docker Swarm to scale your service across the nodes in a really simple way
