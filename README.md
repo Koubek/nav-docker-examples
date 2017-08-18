@@ -31,3 +31,5 @@ $NAV_DOCKER_IMAGE = 'navdocker.azurecr.io/dynamics-nav:devpreview'
 We will created and published **ClickOnce** package. And finally, we will try to connect from **VS Code** to the container`s **dev services**.
 
 - [winauth on Docker Swarm + Secrets](swarm_winauth) - One of the advanced scenarios. We will increase the security of your credentials using Docker Swarm\`s Secrets. We will also talk about the **scaling** capabilities of the *Docker Swarm*. You will need to promote your docker host on the [Docker Swarm](https://docs.microsoft.com/en-us/virtualization/windowscontainers/manage-containers/swarm-mode) node. But don\`t worry, this is actually quite easy to do.
+
+- [share data using mounts](share_mount_addins) - In case you need to share (for example) **add-ins** between your *Docker host* and containers *Docker Volumes* would be probably the easiest way for you.

@@ -20,14 +20,14 @@ docker swarm init --advertise-addr=127.0.0.1
 
 **Note:** In case you expect another nodes will be added you should probably use a static IP address to advertise your node.
 
-Now you can run `docker info`. You should be able to see you are running an active swarm node:
+Now you can run `docker info`. You should be able something similar to confirm you are using an active swarm node:
 
 ![](../media/swarm_winauth_dockerInfo.jpg)
 
 
 ### Set your password as a Docker Secret
 
-This step is very simple. You modify and run the following command:
+This step is very simple. You should modify and run the following command:
 
 ```
 echo '[my_win_pwd]' | docker secret create mywinuser_win_pwd -
@@ -68,7 +68,7 @@ And in the following screenshot you can see how simple it really is:
 
     - My current solution is more flexible (the positive aspect) in the costs *'duplicity'* (the negative aspect).
 
-    **Note:** You can read about the *Mounts* [here](https://docs.docker.com/engine/reference/commandline/service_create/#add-bind-mounts-or-volumes).
+    **Note:** You can read about *Mounts* [here](https://docs.docker.com/engine/reference/commandline/service_create/#add-bind-mounts-or-volumes).
 
 - `-e username=MyWinUser` - **Set your Windows account!!!** Don\`t forget to change this value to match your own credential (eg: `-e username=Jakub` in my particular case).
 
