@@ -33,3 +33,5 @@ We will created and published **ClickOnce** package. And finally, we will try to
 - [winauth on Docker Swarm + Secrets](swarm_winauth) - One of the advanced scenarios. We will increase the security of your credentials using Docker Swarm\`s Secrets. We will also talk about the **scaling** capabilities of the *Docker Swarm*. You will need to promote your docker host on the [Docker Swarm](https://docs.microsoft.com/en-us/virtualization/windowscontainers/manage-containers/swarm-mode) node. But don\`t worry, this is actually quite easy to do.
 
 - [share data using mounts](share_mount_addins) - In case you need to share (for example) **add-ins** between your *Docker host* and containers *Docker Volumes* would be probably the easiest way for you.
+
+- [locally copied C/SIDE](local_cside) - An example that will demonstrate how to copy *client folder* down to your docker host to be able to access **C/SIDE** without installing it. You *don\`t need* to run **gMSA**. Actually, I use the *WinAuth hack* (mentioned before) in the example.
