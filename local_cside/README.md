@@ -17,7 +17,7 @@ You can see the next overrides here in this example. There are two standard file
 
 - `-e Auth=Windows` - Required in this example. Was described in the previous examples.
 
-- `-e username=Jakub` - Required in this example. Was described in the previous examples.
+- `-e username=Jakub` - Required in this example. Was described in the previous examples. **You have to change the value to match your user name.**
 
 - `-e password=$passplain` - Required in this example. Was described in the previous examples.
 
