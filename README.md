@@ -6,7 +6,7 @@ At this moment, all examples use Docker images for MS Dynamics NAV provided by M
 
 ~~Microsoft at the moment doesn\`t provide the images in the public repositories (e.g. [Docker Hub](https://hub.docker.com/)). Instead, there is a private repository for testing purposes only. Currently, they have been opened to give the access to the private/testing repository to *anyone* interested and willing to do some tests and provide a feedback. This can change at any moment I suppose.~~
 
-Microsoft has recently started with publishing the images into the official [Docker Hub](https://hub.docker.com/r/microsoft/dynamics-nav/). Currently anyone can start using NAV on Docker. Please, read all the information in the repository to understand which version will be published in the repo, how to localize them and for what purposes you are allowed to use them. Microsoft, many thanks!!!
+Microsoft has recently started with publishing of the images into the official [Docker Hub](https://hub.docker.com/r/microsoft/dynamics-nav/). Currently anyone can start using NAV on Docker. Please, read all the information in the repository to understand which version will be published in the repo, how to localize them and for what purposes you are allowed to use them. Microsoft, many thanks!!!
 
 Also, you can visit Microsoft GitHub repository [nav-docker](https://github.com/Microsoft/nav-docker) with the source code they use to build the images. There, you can also register any issue that will appear during the testing.
 
