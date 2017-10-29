@@ -10,8 +10,7 @@ $passsec = Read-Host 'Input the user`s password' -AsSecureString
 $passsec = ConvertFrom-SecureString $passsec -Key $Key
 
 docker run `
-    --rm `
-    -m 3G `
+    -m 2G `
     --name $hostname `
     --hostname $hostname `
     -v $PSScriptRoot\my:c:\run\my `

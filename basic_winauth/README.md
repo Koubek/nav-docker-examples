@@ -44,6 +44,10 @@ You can see that the solution we have just mentioned improves somehow our possib
 
 We can see that there is no information about the user (user name and user password are not present).
 
+If we run `docker inspect navex-basic-securepwd` we will see that the password is still there but it is visible in the encrypted form and without the key, anybody won\`t be able to reveal it. I repeat that the key is being deleted automatically once the password was decrypted in the container (practically within a few seconds after the container was started).
+
+![](../media/basic_winauth_securePwd_inspect.jpg)
+
 ## CLICKONCE
 
 You can see there is a new link to download "ClickOnce Manifest". Use the link, open the web page and download the manifest clicking on **Install now**.
