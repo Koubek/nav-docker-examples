@@ -10,11 +10,12 @@ Microsoft has recently started with publishing of the images into the official [
 
 Also, you can visit Microsoft GitHub repository [nav-docker](https://github.com/Microsoft/nav-docker) with the source code they use to build the images. There, you can also register any issue that will appear during the testing.
 
-It is pretty possible that some of the examples could fail because of the breaking changes in the sources images. Please, in this case I will appreciate your feedback (create an issue).
+It is pretty possible that some examples could fail because of the breaking changes in the sources images. Please, in this case I will appreciate your feedback (create an issue).
 
 ## PREREQUISITES AND GENERAL SETUP
-- [Docker](https://www.docker.com/) has to be installed and properly configured on your **Win10** / **WinServer2016** (or higher) machine. Some of the examples will need some extra setups but those will be described for each example explicitly. 
-- By default we will be using **NAT** network which is the default one configured during the Docker installation process. You can find more details about [Docker networking here](https://docs.microsoft.com/virtualization/windowscontainers/manage-containers/container-networking).
+- [Docker](https://www.docker.com/) has to be installed and properly configured on your **Win10** / **WinServer2016** (or higher) machine. Some examples will need some extra setups but those will be described for each example explicitly. 
+- If you want to install **Docker EE** on your Windows Server you can use [InstallDockerEE.ps1](https://gist.github.com/Koubek/1831c2aba7f558de4b1461476105ba85) script that will install **Containers** Windows Feature and then **Docker EE**. The script can be used also to upgrade your current version. It detects an existing (installed) **Docker EE** version present on your host and let you compare your version with the newest one available to download and install. If you confirm the new version will be downloaded and installed. This is very useful in case you are waiting for a specific Docker release and you want to check if this release has been already pushed into the repo or not.
+- By default, we will be using **NAT** network which is the default one configured during the Docker installation process. You can find more details about [Docker networking here](https://docs.microsoft.com/virtualization/windowscontainers/manage-containers/container-networking).
 - All examples specify NAV docker image using `${NAV_DOCKER_IMAGE}` variable. This gives us some sort of flexibility in case Microsoft migrate the repository or change the name of the images, tags etc.
 - So the first step, before you run any script including `docker run` command, is setting the variable. For example:
 ```powershell
@@ -27,7 +28,7 @@ $NAV_DOCKER_IMAGE = 'microsoft/dynamics-nav'
 
 ## EXAMPLES
 
-- [basic](basic) - This is the most elemental example. I would recommend to run exactly this one at the very first moment to validate that everything is working fine. You specify the minimum of the parameters.
+- [basic](basic) - This is the most elemental example. I would recommend running exactly this one at the very first moment to validate that everything is working fine. You specify the minimum of the parameters.
 
 - [basic with user+pwd defined](basic_userpwd) - Similar to the previous one but you specify **user name**, **user pwd**, **container hostname**, **container name**. There are also described some security concerns (security of the password you use). The example includes two variants.
 
