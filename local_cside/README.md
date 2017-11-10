@@ -52,3 +52,19 @@ You can enter the folder and run standard `finsql.exe` or the newly created `_ru
 You should be able to run objects directly from the *C/SIDE*:
 
 ![](../media/local_cside_runningRtc.jpg)
+
+---
+## Running C/SIDE and AL Side-by-Side
+
+**Note:**
+    You have to run the container with this flag: `-e enableSymbolLoading=Y`
+
+Create new table in *C/SIDE*:
+
+![](../media/local_cside_myTableCSIDE.jpg)
+
+*C/SIDE* will automatically publish all necessary metadata to reflect your changes in **Visual Studio Code**.
+
+Now you can download symbols from *Visual Studio Code* and you should be able to see your table:
+
+![](../media/local_cside_myTableExtension.jpg)
