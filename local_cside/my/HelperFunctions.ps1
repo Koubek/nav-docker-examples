@@ -34,7 +34,12 @@ function Export-ClientFolder
         $clientUserSettings.SelectSingleNode("//configuration/appSettings/add[@key='ClientServicesCredentialType']").value = "$Auth"
         $clientUserSettings.Save("$Path\RoleTailored Client\ClientUserSettings.config")        
 
-        New-FinSqlExeRunner -FileFullPath "$Path\RoleTailored Client\_runfinsql.exe" -SqlServerName $sqlServerName -DbName "$databaseName" -NtAuth $ntAuth -Id "docker_$hostname"
+        New-FinSqlExeRunner -FileFullPath "$Path\RoleTailored Client\_runfinsql.exe" `
+            -SqlServerName $sqlServerName `
+            -DbName "$databaseName" `
+            -NtAuth $ntAuth `
+            -Id "docker_$hostname" `
+            -GenerateSymbolRef ($enableSymbolLoadingAtServerStartup -eq $true)
     }
 }
 
@@ -51,7 +56,9 @@ function New-FinSqlExeRunner
         [Parameter(Mandatory=$True)]
         [bool]$NtAuth,
         [Parameter(Mandatory=$True)]
-        [string]$Id
+        [string]$Id,
+        [Parameter()]
+        [bool]$GenerateSymbolRef=$false
     )
 
     $useNtAuth = If ($NtAuth) { 1 } Else { 0 }
@@ -60,10 +67,35 @@ function New-FinSqlExeRunner
 
     New-Item -ItemType Directory -Path $buildFolder -Force | Out-Null
 
-    Set-Content "$buildFolder\$fileName.ps1" "Start-Process 'finsql.exe' -ArgumentList ""servername=$SqlServerName, database=$DbName, ntauthentication=$useNtAuth, id=$Id""" -Force
+    $generateSymbolRefStr = ""
+    if ($GenerateSymbolRef -and (IsEnableSymbolLoadingSupported)) {
+        $generateSymbolRefStr = ', generatesymbolreference=yes '
+    }
+
+    Set-Content "$buildFolder\$fileName.ps1" "Start-Process 'finsql.exe' -ArgumentList ""servername=$SqlServerName, database=$DbName, ntauthentication=$useNtAuth, id=$Id $generateSymbolRefStr""" -Force
     & (Join-Path $PSScriptRoot 'ps2exe.ps1') -inputFile "$buildFolder\$fileName.ps1" -outputFile "$buildFolder\$fileName" -noconsole -runtime40 -wait -end *>$null
 
     Copy-Item "$buildFolder\$fileName" $FileFullPath -Force | Out-Null
 
     Remove-Item $buildFolder -Recurse -Force | Out-Null
+}
+
+function IsEnableSymbolLoadingSupported 
+{
+    [CmdletBinding()]
+    param(
+    )
+
+    return ($(Get-NavVersion) -ge [System.Version]'11.0.19097.0')
+}
+
+function Get-NavVersion
+{
+    [CmdletBinding()]
+    param(
+    )
+
+    $finSql = Get-ChildItem $roleTailoredClientFolder 'finsql.exe'
+    
+    return $finSql.VersionInfo.ProductVersionRaw
 }
