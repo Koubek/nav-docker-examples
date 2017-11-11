@@ -8,7 +8,7 @@ We will actually copy the content of the *RoleTailored Client* folder back into 
 
 You can see the next overrides here in this example. There are two standard files being overridden (in the folder `my`):
 - `AdditionalSetup.ps1` - This one executes `Export-ClientFolder` function defined in the following file.
-- `HelperFunctions.ps1` - You can see I add two new functions here. `Export-ClientFolder` copies the content of *RoleTailored Client* folder down to your *docker host*. It also `ClientUserSettings.config` file properly configured to be able to run objects directly from *C/SIDE*. The second function called `New-FinSqlExeRunner` creates an executable that will be copied to the same folder. This new `_runfinsql.exe` file will let you run *C/SIDE* with all required parameters (you won\`t need to configure *C/SIDE* parameters like *server name*, *server instance*, *database name* etc.).
+- `HelperFunctions.ps1` - You can see I add two new functions here. `Export-ClientFolder` copies the content of *RoleTailored Client* folder down to your *docker host*. It also `ClientUserSettings.config` file properly configured to be able to run objects directly from *C/SIDE*. The second function called `New-FinSqlExeRunner` creates an executable that will be copied to the same folder. This new `_finsql-on-docker.exe` file will let you run *C/SIDE* with all required parameters (you won\`t need to configure *C/SIDE* parameters like *server name*, *server instance*, *database name* etc.).
 
 ---
 ## This solution is **Running C/SIDE and AL Side-by-Side** aware and it will let you run new NAV versions (since November update) side by side.
@@ -43,7 +43,7 @@ This one confirms the files were copied down to your *docker host*. Now, you can
 
 ![](../media/local_cside_myFolderContent.jpg)
 
-You can enter the folder and run standard `finsql.exe` or the newly created `_runfinsql.exe` which will run pre-configured `finsql.exe`. This will automatically add `generatesymbolreference=yes` when `-e enableSymbolLoading=Y` was specified.
+You can enter the folder and run standard `finsql.exe` or the newly created `_finsql-on-docker.exe` which will run pre-configured `finsql.exe`. This will automatically add `generatesymbolreference=yes` when `-e enableSymbolLoading=Y` was specified.
 
 ![](../media/local_cside_rtcFolderContent.jpg)
 

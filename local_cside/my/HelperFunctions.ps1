@@ -34,7 +34,7 @@ function Export-ClientFolder
         $clientUserSettings.SelectSingleNode("//configuration/appSettings/add[@key='ClientServicesCredentialType']").value = "$Auth"
         $clientUserSettings.Save("$Path\RoleTailored Client\ClientUserSettings.config")        
 
-        New-FinSqlExeRunner -FileFullPath "$Path\RoleTailored Client\_runfinsql.exe" `
+        New-FinSqlExeRunner -FileFullPath "$Path\RoleTailored Client\_finsql-on-docker.exe" `
             -SqlServerName $sqlServerName `
             -DbName "$databaseName" `
             -NtAuth $ntAuth `
@@ -64,6 +64,7 @@ function New-FinSqlExeRunner
     $useNtAuth = If ($NtAuth) { 1 } Else { 0 }
     $fileName = Split-Path $FileFullPath -Leaf
     $buildFolder = Join-Path $PSScriptRoot '_buildfinsqlrunner'
+    $iconFile = 'finsqlicon.ico'
 
     New-Item -ItemType Directory -Path $buildFolder -Force | Out-Null
 
@@ -72,12 +73,20 @@ function New-FinSqlExeRunner
         $generateSymbolRefStr = ', generatesymbolreference=yes '
     }
 
+    # Extract and prepare icon file
+    $icon = [System.IO.FileStream]::new("$buildFolder\$iconFile", [System.IO.FileMode]::OpenOrCreate)
+    (Get-CsideIcon).Save($icon)
+    $icon.Close()
+    Copy-Item "$buildFolder\$iconFile" "c:\$iconFile"
+    
     Set-Content "$buildFolder\$fileName.ps1" "Start-Process 'finsql.exe' -ArgumentList ""servername=$SqlServerName, database=$DbName, ntauthentication=$useNtAuth, id=$Id $generateSymbolRefStr""" -Force
-    & (Join-Path $PSScriptRoot 'ps2exe.ps1') -inputFile "$buildFolder\$fileName.ps1" -outputFile "$buildFolder\$fileName" -noconsole -runtime40 -wait -end *>$null
+    & (Join-Path $PSScriptRoot 'ps2exe.ps1') -inputFile "$buildFolder\$fileName.ps1" -outputFile "$buildFolder\$fileName" -iconFile "$iconFile" -noconsole -runtime40 -wait -end *>$null
 
     Copy-Item "$buildFolder\$fileName" $FileFullPath -Force | Out-Null
 
+    # Cleanup
     Remove-Item $buildFolder -Recurse -Force | Out-Null
+    Remove-Item "c:\$iconFile" -Force | Out-Null
 }
 
 function IsEnableSymbolLoadingSupported 
@@ -98,4 +107,12 @@ function Get-NavVersion
     $finSql = Get-ChildItem $roleTailoredClientFolder 'finsql.exe'
     
     return $finSql.VersionInfo.ProductVersionRaw
+}
+function Get-CsideIcon {
+    [CmdletBinding()]
+    param(
+    )
+
+    Add-Type -AssemblyName System.Drawing
+    return ([Drawing.Icon]::ExtractAssociatedIcon((Get-ChildItem $roleTailoredClientFolder 'finsql.exe').FullName))
 }
