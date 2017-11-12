@@ -10,8 +10,8 @@ docker service create `
     --health-timeout=20s `
     --health-retries=5 `
     -e Accept_eula=Y `
-    -e WindowsAuth=Y `
-    -e username=MyWinUser `
+    -e Auth=Windows `
     -e clickonce=Y `
+    -e username=$env:USERNAME `
     -e secretPassword=mywinuser_win_pwd `
     ${NAV_DOCKER_IMAGE}
