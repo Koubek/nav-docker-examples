@@ -79,7 +79,7 @@ function New-FinSqlExeRunner
     $icon.Close()
     Copy-Item "$buildFolder\$iconFile" "c:\$iconFile"
     
-    Set-Content "$buildFolder\$fileName.ps1" "Start-Process 'finsql.exe' -ArgumentList ""servername=$SqlServerName, database=$DbName, ntauthentication=$useNtAuth, id=$Id $generateSymbolRefStr""" -Force
+    Set-Content "$buildFolder\$fileName.ps1" "Start-Process '.\finsql.exe' -ArgumentList ""servername=$SqlServerName, database=$DbName, ntauthentication=$useNtAuth, id=$Id $generateSymbolRefStr""" -Force
     & (Join-Path $PSScriptRoot 'ps2exe.ps1') -inputFile "$buildFolder\$fileName.ps1" -outputFile "$buildFolder\$fileName" -iconFile "$iconFile" -noconsole -runtime40 -wait -end *>$null
 
     Copy-Item "$buildFolder\$fileName" $FileFullPath -Force | Out-Null
