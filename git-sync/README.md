@@ -7,6 +7,8 @@
     This example is using some prerequisites like: *license*, *repo folder*.
 
 
+![](../media/git-sync_demo_01.gif)
+
 This is an experimental example that will allow you to synchronize object changes to a specified folder (for example Git workspace).
 
 In this example you have to create (if is not present) a folder named `repo` in the same folder the script `run.ps1` is being placed. This will be your repository folder.
