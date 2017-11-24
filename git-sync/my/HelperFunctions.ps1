@@ -148,3 +148,23 @@ function Start-NavChangeTrackerExport {
     
     . (Join-Path $PSScriptRoot 'gitsync\ExportObjects.ps1') -RepoPath $objRepoPath -SqlServer (Get-SqlServerAndInstance) -Database $databaseName -CompleteSync $CompleteSync
 }
+
+function Install-Chocolatey {
+    [CmdletBinding()]
+    param(        
+    )
+
+    Write-Host "Installing Chocolatey"
+    $env:chocolateyUseWindowsCompression = $false
+    Invoke-Expression ((New-Object Net.WebClient).DownloadString('https://chocolatey.org/install.ps1')) *>$null
+    choco feature enable -n allowGlobalConfirmation *>$null
+}
+
+function Install-Git {
+    [CmdletBinding()]
+    param(
+    )
+
+    Write-Host "Installing Git"
+    choco install git *>$null
+}
