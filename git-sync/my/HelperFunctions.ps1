@@ -168,3 +168,95 @@ function Install-Git {
     Write-Host "Installing Git"
     choco install git *>$null
 }
+
+function Register-FileSystemWatcher {
+    [CmdletBinding()]
+    param(
+        [Parameter(Mandatory = $true)]
+        [String]$FolderToWatch,
+        [Parameter()]
+        [String]$Filter = '*.*',
+        [Parameter()]
+        [Boolean]$IncludeSubfolders = $false,
+        [Parameter()]
+        [Boolean]$TrackCreate = $false,
+        [Parameter()]
+        [scriptblock]$OnCreateCode,
+        [Parameter()]
+        [Boolean]$TrackModify = $false,
+        [Parameter()]
+        [scriptblock]$OnModifyCode,
+        [Parameter()]
+        [Boolean]$TrackDelete = $false,
+        [Parameter()]
+        [scriptblock]$OnDeleteyCode
+    )
+
+    $fswEvents = New-Object System.Collections.ArrayList
+    
+    $fsw = New-Object IO.FileSystemWatcher $FolderToWatch, $Filter -Property @{IncludeSubdirectories = $IncludeSubfolders;NotifyFilter = [IO.NotifyFilters]'FileName, LastWrite'}
+
+    if (($TrackCreate -eq $true) -and ($OnCreateCode)) {
+        $createEventIdentifier = [guid]::NewGuid()
+        Register-ObjectEvent $fsw Created -SourceIdentifier $createEventIdentifier -Action $OnCreateCode
+        $fswEvents.Add($createEventIdentifier)
+    }
+
+    if (($TrackModify -eq $true) -and ($OnModifyCode)) {
+        $modifyEventIdentifier = [guid]::NewGuid()
+        Register-ObjectEvent $fsw Changed -SourceIdentifier $modifyEventIdentifier -Action $OnModifyCode
+        $fswEvents.Add($modifyEventIdentifier)
+    }
+
+    if (($TrackDelete -eq $true) -and ($OnDeleteyCode)) {
+        $deleteEventIdentifier = [guid]::NewGuid()
+        Register-ObjectEvent $fsw Changed -SourceIdentifier $deleteEventIdentifier -Action $OnDeleteyCode
+        $fswEvents.Add($deleteEventIdentifier)
+    }
+}
+
+function Get-ObjectTypeFilePrefix {
+    [CmdletBinding()]
+    param(
+        [Parameter(Mandatory = $true)]
+        [Int]$ObjType
+    )
+
+    switch ($ObjType) {
+        1 { $objFilePrefix = 'TAB' }
+        # 2 { $objFilePrefix = 'FOR' }
+        3 { $objFilePrefix = 'REP' }
+        5 { $objFilePrefix = 'COD' }
+        6 { $objFilePrefix = 'XML' }
+        7 { $objFilePrefix = 'MEN' }
+        8 { $objFilePrefix = 'PAG' }
+        9 { $objFilePrefix = 'QUE' }
+    }
+
+    return $objFilePrefix
+}
+
+function Get-ObjectTypeIdFromFilename {
+    [CmdletBinding()]
+    param(
+        [Parameter(Mandatory = $true)]
+        [String]$Filename
+    )
+
+    $prefix = $Filename.Substring(0, 3)
+
+    switch ($prefix) {
+        'TAB' { $objType = 1 }
+        # 'FOR' { $objType = 2 }
+        'REP' { $objType = 3 }
+        'COD' { $objType = 5 }
+        'XML' { $objType = 6 }
+        'MEN' { $objType = 7 }
+        'PAG' { $objType = 8 }
+        'QUE' { $objType = 9 }
+    }
+
+    [Int]$objId = $Filename.Substring(3)
+
+    return { $objType, $objId }
+}

@@ -21,6 +21,8 @@ CREATE TABLE [dbo].[SCM.ObjectMetadata](
 	[Hash] [nvarchar](32) NOT NULL,
 	[Object Subtype] [nvarchar](30) NOT NULL,
 	[Has Subscribers] [tinyint] NOT NULL,
+	[FileName] [nvarchar](50) NOT NULL,
+	[TxtFileHash] [nvarchar](32) NOT NULL,
  CONSTRAINT [SCM.ObjectMetadata$0] PRIMARY KEY CLUSTERED
 (
 	[Object Type] ASC,
