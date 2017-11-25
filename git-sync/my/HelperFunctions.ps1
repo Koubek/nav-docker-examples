@@ -146,7 +146,16 @@ function Start-NavChangeTrackerExport {
         [Boolean]$CompleteSync = $false
     )
     
-    . (Join-Path $PSScriptRoot 'gitsync\ExportObjects.ps1') -RepoPath $objRepoPath -SqlServer (Get-SqlServerAndInstance) -Database $databaseName -CompleteSync $CompleteSync
+    try {
+        if (!$CompleteSync) {
+            Export-Nav2Scm -RepoPath $objRepoPath -SqlServerInstance (Get-SqlServerAndInstance) -Database $databaseName
+        } else {
+            Export-Nav2ScmAll -RepoPath $objRepoPath -SqlServerInstance (Get-SqlServerAndInstance) -Database $databaseName
+        }
+    }
+    catch {
+        Resolve-ScmOperationException -ScmException $_
+    }
 }
 
 function Install-Chocolatey {
@@ -222,6 +231,7 @@ function Get-ObjectTypeFilePrefix {
         [Int]$ObjType
     )
 
+    # TableData,Table,,Report,,Codeunit,XMLport,MenuSuite,Page,Query,System,FieldNumber
     switch ($ObjType) {
         1 { $objFilePrefix = 'TAB' }
         # 2 { $objFilePrefix = 'FOR' }
@@ -245,6 +255,7 @@ function Get-ObjectTypeIdFromFilename {
 
     $prefix = $Filename.Substring(0, 3)
 
+    # TableData,Table,,Report,,Codeunit,XMLport,MenuSuite,Page,Query,System,FieldNumber
     switch ($prefix) {
         'TAB' { $objType = 1 }
         # 'FOR' { $objType = 2 }
@@ -259,4 +270,168 @@ function Get-ObjectTypeIdFromFilename {
     [Int]$objId = $Filename.Substring(3)
 
     return { $objType, $objId }
+}
+
+function Import-NavModelToolsModule {
+    [CmdletBinding()]
+    param(        
+    )
+
+    if ($Global:NavModelToolsModuleImported -eq $true) {
+        return
+    }
+
+    $module = Get-ChildItem 'C:\Program Files (x86)\Microsoft Dynamics NAV\*\RoleTailored Client\' -Filter 'NavModelTools.ps1' -Recurse
+    Import-Module $module -DisableNameChecking -Global *>$null
+
+    $Global:NavModelToolsModuleImported = $true
+}
+
+function Resolve-ScmOperationException {
+    [CmdletBinding()]
+    param(
+        [Parameter(Mandatory = $true)]
+        $ScmException
+    )
+
+    Write-Warning "SCM EXCEPTION"
+    if ($ScmException) {
+        Write-Warning "ERROR MSG: $($ScmException.Exception.Message)"
+        Write-Warning "ERROR TRACE: $($ScmException.ScriptStackTrace)"
+    }
+}
+
+function Resolve-FullNav2ScmExportRecommended {
+    [CmdletBinding()]
+    param(
+        [Parameter(Mandatory)]
+        [String]$RepoPath
+    )
+
+    if (!(Test-Path $RepoPath))
+    {
+        return $true
+    }
+
+    $objCountInFolder = Get-ChildItem $RepoPath -Filter '*.TXT' | Measure-Object
+    if ($objCountInFolder.Count -eq 0) {
+        return $true
+    }
+
+    return $false
+}
+
+function Export-Nav2ScmAll {
+    [CmdletBinding()]
+    param(
+        [Parameter(Mandatory)]
+        [String]$RepoPath,
+        [String]$SqlServerInstance = "LOCALHOST\SQLEXPRESS",
+        [String]$Database = "CRONUS"
+    )
+
+    try {        
+        
+        Write-Host "Running NAV object full sync (export). This process may take several minutes..."
+
+        if (!(Test-Path $RepoPath))
+        {
+            git init $RepoPath *>$null
+            New-Item -Path $RepoPath -ItemType Directory -Force | Out-Null
+        }
+    
+        $localWorkPath = Join-Path $repoPath 'TEMPEXP'
+        if (!(Test-Path $localWorkPath)) {
+            New-Item $localWorkPath -Type Directory -Force | Out-Null
+            '*' | Set-Content (Join-Path $localWorkPath '.gitignore')
+        }
+    
+        $expFile =  Join-Path $localWorkPath 'NAV_ScmExport.txt'
+    
+        Import-NavModelToolsModule
+        Export-NAVApplicationObject -DatabaseName $database -DatabaseServer $SqlServerInstance -Path $expFile -Force | Out-Null
+        if (Test-Path($expFile))
+        {
+            if ((Get-Item $expFile).length -gt 0kb)
+            {
+                Remove-Item -Path (Join-Path $repoPath '*.TXT') -Force                
+                Split-NAVApplicationObjectFile -Source $expFile -Destination $repoPath -Force
+            }
+            Remove-Item $expFile -Force
+        }
+        Write-Host "NAV object full export has been finished."
+    }
+    catch {    
+        Resolve-ScmOperationException -ScmException $_
+    }
+}
+
+function Export-Nav2Scm {
+    [CmdletBinding()]
+    param(
+        [Parameter(Mandatory)]
+        [String]$RepoPath,
+        [String]$SqlServerInstance = "LOCALHOST\SQLEXPRESS",
+        [String]$Database = "CRONUS"
+    )
+
+    if (Resolve-FullNav2ScmExportRecommended -RepoPath $RepoPath)
+    {
+        Export-Nav2ScmAll -RepoPath $RepoPath -SqlServerInstance $SqlServerInstance -Database $Database
+        return
+    }
+
+    try {
+        
+        $pendingObjects = Invoke-Sqlcmd -Query "SELECT * FROM [dbo].[SCM.ObjectLog]" -ServerInstance "$SqlServerInstance" -Database $database
+        $pendingObjCount = $pendingObjects | Measure-Object
+
+        if ($pendingObjCount.Count -eq 0) {
+            return
+        }
+        
+        $localWorkPath = Join-Path $RepoPath 'TEMPEXP'
+        if (!(Test-Path $localWorkPath)) {
+            New-Item $localWorkPath -Type Directory -Force | Out-Null
+            '*' | Set-Content (Join-Path $localWorkPath '.gitignore')
+        }
+
+        $expFile =  Join-Path $localWorkPath 'NAV_ScmExport.txt'
+
+        Import-NavModelToolsModule
+        
+        foreach ($obj in $pendingObjects) {
+        
+            $objType = $obj.Item("Object Type")
+            $objId = $obj.Item("Object ID")
+            $objMod = $obj.Item("Action GUID")
+            $objAction = $obj.Item("Last Action")
+           
+            if ($objAction -eq 3) {                
+                # DELETE action - we need to remove an existing file.
+                $objFilePrefix = Get-ObjectTypeFilePrefix -ObjType $objType
+                $fileToRemove = Join-Path $repoPath "$objFilePrefix$objId.TXT"
+                if (Test-Path $fileToRemove) {
+                    Remove-Item $fileToRemove -Force
+                }
+            }
+
+            Export-NAVApplicationObject -DatabaseName $database -DatabaseServer $SqlServerInstance -Path $expFile -Filter "Type=$objType;ID=$objId" -Force | Out-Null
+
+            Invoke-Sqlcmd -Query "DELETE FROM [dbo].[SCM.ObjectLog] WHERE ([Object Type] = $objType) AND ([Object ID] = $objId) AND ([Action GUID] = '$objMod')" `
+                -ServerInstance "$SqlServerInstance" -Database $database
+
+            if (Test-Path($expFile))
+            {
+                if ((Get-Item $expFile).length -gt 0kb)
+                {
+                    Split-NAVApplicationObjectFile -Source $expFile -Destination $repoPath -Force
+                }
+                Remove-Item $expFile -Force
+            }
+        }
+    }
+    catch {    
+        Resolve-ScmOperationException -ScmException $_
+    }
 }

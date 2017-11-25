@@ -6,5 +6,12 @@ while ($true)
     $lastCheck = $thisCheck
     Start-Sleep -Seconds 2
 
-    Start-NavChangeTrackerExport
+    try {
+        Write-Host "Export started"
+        Start-NavChangeTrackerExport
+        Write-Host "Export finished"
+    } catch {
+        Write-Warning "ERROR MSG: $($_.Exception.Message)"
+        Write-Warning "ERROR TRACE: $($_.ScriptStackTrace)"
+    }
 }

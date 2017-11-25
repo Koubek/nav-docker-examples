@@ -21,8 +21,12 @@ CREATE TABLE [dbo].[SCM.ObjectMetadata](
 	[Hash] [nvarchar](32) NOT NULL,
 	[Object Subtype] [nvarchar](30) NOT NULL,
 	[Has Subscribers] [tinyint] NOT NULL,
+	-- NAV Object Exists
+	[Metadata Exists] [tinyint] NOT NULL,
+	-- Only the filename (TAB27.TXT etc.)
 	[FileName] [nvarchar](50) NOT NULL,
 	[TxtFileHash] [nvarchar](32) NOT NULL,
+	[Transaction GUID] [varchar](60) NOT NULL,
  CONSTRAINT [SCM.ObjectMetadata$0] PRIMARY KEY CLUSTERED
 (
 	[Object Type] ASC,

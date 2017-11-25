@@ -18,7 +18,7 @@ $passsec = Read-Host 'Input the user`s password' -AsSecureString
 $passsec = ConvertFrom-SecureString $passsec -Key $Key
 
 docker run `
-    -m 3G `
+    -m 4G `
     --name $hostname `
     --hostname $hostname `
     -v $PSScriptRoot\my:c:\run\my `
@@ -31,4 +31,5 @@ docker run `
     -e licensefile='c:\run\my\_license.flf' `
     -e objRepoPath=c:\gitrepo `
     -e enableSymbolLoading=Y `
+    -e ExitOnError=N `
     ${NAV_DOCKER_IMAGE}
