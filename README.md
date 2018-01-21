@@ -41,6 +41,5 @@ $NAV_DOCKER_IMAGE = 'microsoft/dynamics-nav'
 - [share data using mounts](share_mount_addins) - In case you need to share (for example) **add-ins** between your *Docker host* and containers *Docker Volumes* would be probably the easiest way for you.
 
 - [locally copied C/SIDE](local_cside) - An example that will demonstrate how to copy *client folder* down to your docker host to be able to access **C/SIDE** without installing it. You *don\`t need* to run **gMSA**. Actually, I use the *WinAuth hack* (mentioned before) in the example. 
-    ### This example is **November update aware** and will let you run **C/SIDE and AL Side-by-Side**.
 
 - [gMSA](gMSA) - This is one of the most complex examples, it will be updated when I have some time. I am starting with the scripts, later I'll improve them and I'll add the documentation.
